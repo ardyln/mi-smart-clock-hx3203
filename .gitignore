@@ -1,0 +1,25 @@
+# Not ours to publish: Xiaomi vendor modules, TYHX datasheets, third-party reference drivers, MTK sources
+panel-ko/
+tyhx/
+hx3203-ref/
+mtk-sensors/
+# Unrelated KOReader benchmark files that ended up in bench/
+bench/settings.reader.lua
+bench/pageturn_bench.py
+bench/analyze.py
+bench/results.json
+bench/run.log
+bench/run_fine.log
+bench/sleep_test.py
+bench/sleep_test.log
+# Build output (the release zip carries the module)
+*.o
+*.ko
+*.mod.c
+*.cmd
+.tmp_versions/
+modules.order
+modules/*/Module.symvers
+tools/alslog
+hx3203-als.zip
+magisk/hx3203.ko
