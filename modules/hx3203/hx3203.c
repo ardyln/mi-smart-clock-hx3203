@@ -9,8 +9,8 @@
  * code (minor ID_LIGHT), exposes the alsactive/alsbatch/alsflush sysfs
  * protocol the HAL speaks, and polls the chip while the HAL has it enabled.
  *
- * Xiaomi's alsps_context differs from the upstream layout and its helpers
- * were freed with __init, so nothing of it is reused. The sensor_attr and
+ * Xiaomi's alsps_context pointer is NULL after boot and the code that
+ * allocates it was freed with __init, so nothing of it is reused. The sensor_attr and
  * sensor_event helpers are not exported; they are looked up by name.
  *
  * Chip facts (measured on the panel, see ../../README.md): ID 0x21, gain

@@ -35,8 +35,9 @@ module, so a driver bug can't trap the clock in a boot loop.
 - While the HAL has the sensor enabled, it polls the chip every 200 ms (or at the HAL's rate, minimum
   100 ms), smooths ch0 over about 1 s, and reports whole lux on a change of at least 0.75 lx. It
   sends the same "value+1, then value" kick after enabling as the stock framework does.
-- Xiaomi's framework object (`alsps_context`, 496 bytes, not the upstream layout) is left alone.
-  The `sensor_attr_*` / `sensor_event_*` helpers aren't exported, so they're resolved with
+- Xiaomi's framework object (`alsps_context`, 496 bytes, laid out like MediaTek's) is left alone.
+  After boot its pointer is NULL and the code that would allocate it was freed with init text
+  (details in [docs/KERNEL.md](docs/KERNEL.md)). The `sensor_attr_*` / `sensor_event_*` helpers aren't exported, so they're resolved with
   `kallsyms_lookup_name`. On this Thumb-2 kernel those addresses come back with bit 0 clear and
   must be ORed with 1 before calling. The first version didn't do that and oopsed with
   "undefined instruction" at `sensor_attr_register+0x2`.
@@ -72,6 +73,10 @@ offset: it read 4–5 lx with every light off, while the clock's sensor read its
 **End to end** (installed module → HAL → Kiosk Satellite → Home Assistant, 70 s holds): TRADFRI
 0 / 110 / 200 / 255 → **0 / 4 / 11 / 22 lx**.
 
+**Why the phone and not the MYGGSPRAY:** against the MYGGSPRAY, which sits elsewhere in the room,
+the factor came out between 0.4 and 0.75 lx per count depending on which bulb was lit. The phone beside
+the clock gave 0.157 consistently. Where a reference sits matters more than how good it is.
+
 **Precision and its limits:**
 - The chip resolves about 0.16 lx per count, with ±1–4 counts of noise. **The vendor HAL passes
   `word[0]` to Android as whole lux** (its `processEvent` converts without dividing), so Android and
@@ -91,7 +96,9 @@ offset: it read 4–5 lx with every light off, while the clock's sensor read its
 - ID register `0x00` = `0x21`. Start-up sequence (from the GL-iNet Zephyr driver):
   `01=70, 02=06, 0c=22, 16=36, 0b=gain, 01=74, 0c=22`; off: `0c=02`.
 - Gain is `0x0b` bits 2:0. Settings 0–3 rise slowly and 4–7 are all about 36×, so 4 is used.
-- **ch0 is linear in light**, from about 1 lx up. Dark level 3.3–3.9 (±1.2).
+- **ch0 is linear in light**, from about 1 lx up. Dark level 3.3–3.9 (±1.2). An earlier reading of a
+  low-light "dead zone" was wrong: it came from KAJPLATS bulbs that didn't actually light up when
+  switched from off ([bench/README.md](bench/README.md)).
 - **ch1 isn't used.** `ch1 = (r08 << 3) | ((r0d & 0x3f) << 11) | (r0e & 7)`. The reference driver
   subtracts `1.45 × ch1` plus an "offset" from `0x80/0x81` (7 here). On this clock that pushes every
   indoor reading below zero. ch1's dark level moved 18 → 27 → 16 within an hour with no change in
@@ -102,6 +109,8 @@ offset: it read 4–5 lx with every light off, while the clock's sensor read its
   sibling HX3229 it selects the photodiode per phase; here it doesn't.
 - Register `0x01`: bits 0, 1 and 3 have no visible effect, bit 2 is set last in the init sequence,
   and bit 7 shifts both channels.
+- Candidates from the sibling HX3229 datasheet, untested here: `0x16` (ADC gain; the init writes `0x36`)
+  and `0x17` (current gain).
 
 ### What could ch1 be?
 
@@ -118,7 +127,8 @@ offset: it read 4–5 lx with every light off, while the clock's sensor read its
 
 - Daylight check against a reference.
 - `0x01` bits 6:4: integration time in the HX3229 (`111` = longest, averaged 8×). If they behave the
-  same here, the current `0x74` is already the maximum.
+  same here, the current `0x74` is already the maximum. Also `0x16` / `0x17`.
+- The `als_level` / `als_value` tables in Xiaomi's device-tree node, and a full dump of the board's tree.
 - The TV-remote test for ch1.
 
 ## Rebuild
@@ -141,11 +151,16 @@ offset: it read 4–5 lx with every light off, while the clock's sensor read its
 
 - `modules/hx3203/`: the driver.
 - `magisk/`: the Magisk module (the release zip adds the built `hx3203.ko`).
-- `tools/alslog.c`: static raw-channel logger (`alslog <seconds> <hz>`, needs `i2c-dev`).
+- `tools/alslog.c`: static raw-channel logger (`alslog <seconds> <hz>`, needs `i2c-dev`). Build:
+  `arm-none-linux-gnueabihf-gcc -O2 -static -march=armv7-a -mthumb -fno-use-linker-plugin -o alslog alslog.c`.
 - `modules/i2cprobe/`, `modules/i2cdev/`: the presence probe and the stock `i2c-dev` built for this
   kernel, used during bring-up.
-- `bench/`: measurement scripts and raw logs. The `sweep*.py` scripts drive Home Assistant lights,
-  and the matching `sweep*.log` / `marks*.json` files hold the logged counts and step times.
+- `bench/`: raw logs, Home Assistant reference data and `analyze_sweeps.py`, which reproduces every
+  number above. **Read [bench/README.md](bench/README.md) first**: some step labels don't mean what
+  they say.
+- `docs/KERNEL.md`: reverse-engineering notes on the kernel, device tree and sensor HAL (sensor class,
+  event rings, why `/dev/sensorlist` always fails, the stock framework's context layout and globals,
+  HAL behaviour). `docs/symbols.txt`: the matching kallsyms excerpt.
 - `docs/NOTES.md`: lab notes from bring-up and calibration.
 
 ## License

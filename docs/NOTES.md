@@ -39,7 +39,7 @@ Xiaomi's kernel (4.14.141+, stock fw 1.7.5) only has the EM3071X driver, so the 
 `hx3203.ko` binds the unbound I2C client `0-0044` (`mediatek,alsps-hx3203`) and stands in for the light half of the
 MTK alsps framework: it registers `m_als_misc` (minor ID_LIGHT=4) through the kernel's `sensor_attr_register`,
 serves `alsactive` ("4,1"), `alsbatch`, `alsflush`, `alsdevnum`, `alscali` in `/sys/class/sensor/m_als_misc/`, and
-polls the chip (200 ms) while enabled. Xiaomi's `alsps_context` (496 bytes, not the upstream layout) is not touched.
+polls the chip (200 ms) while enabled. Xiaomi's `alsps_context` (496 bytes, MediaTek's layout; see KERNEL.md) is not touched.
 Helpers come from `kallsyms_lookup_name` — **set bit 0 on those addresses** (Thumb-2 kernel); without it the first
 call oopsed ("undefined instruction" at `sensor_attr_register+0x2`, panel rebooted once).
 

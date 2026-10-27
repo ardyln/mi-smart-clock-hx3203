@@ -1,0 +1,340 @@
+{
+"sensor.24117rk2cg_light_sensor": [
+{
+"t_ms": 1793048907958,
+"state": "0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049121729,
+"state": "5",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049213642,
+"state": "6",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049361791,
+"state": "8",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049421752,
+"state": "10",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049541794,
+"state": "14",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049601893,
+"state": "23",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049662071,
+"state": "6",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049721689,
+"state": "10",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049795441,
+"state": "30",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049901564,
+"state": "4",
+"unit_of_measurement": "lx"
+}
+],
+"sensor.bedroom_myggspray_wrlss_mtn_sensor_illuminance": [
+{
+"t_ms": 1793048907958,
+"state": "1.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049419704,
+"state": "17.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049539895,
+"state": "40.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049599984,
+"state": "89.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049660068,
+"state": "1.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049840296,
+"state": "105.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049900375,
+"state": "1.0",
+"unit_of_measurement": "lx"
+}
+],
+"sensor.unknown_phh_treble_vanilla_ambient_light": [
+{
+"t_ms": 1793048907958,
+"state": "0.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049103496,
+"state": "88.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049105497,
+"state": "0.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049485441,
+"state": "6.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049487441,
+"state": "4.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049489600,
+"state": "0.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049491601,
+"state": "4.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049515445,
+"state": "2.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049545443,
+"state": "0.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049575445,
+"state": "60.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049605443,
+"state": "85.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049635445,
+"state": "63.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049665446,
+"state": "0.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049714945,
+"state": "4.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049725449,
+"state": "0.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049755447,
+"state": "4.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049785448,
+"state": "14.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049815448,
+"state": "154.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049845449,
+"state": "149.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793049875450,
+"state": "0.0",
+"unit_of_measurement": "lx"
+}
+],
+"light.kajplats_e14_ws_globe_806lm": [
+{
+"t_ms": 1793048907958,
+"state": "on"
+},
+{
+"t_ms": 1793049027967,
+"state": "off"
+},
+{
+"t_ms": 1793049713452,
+"state": "on"
+},
+{
+"t_ms": 1793049713455,
+"state": "on"
+},
+{
+"t_ms": 1793049713457,
+"state": "on"
+},
+{
+"t_ms": 1793049713617,
+"state": "on"
+},
+{
+"t_ms": 1793049714509,
+"state": "on"
+},
+{
+"t_ms": 1793049714704,
+"state": "on"
+},
+{
+"t_ms": 1793049870186,
+"state": "off"
+},
+{
+"t_ms": 1793049945444,
+"state": "on"
+},
+{
+"t_ms": 1793049945601,
+"state": "on"
+}
+],
+"light.kajplats_e27_ws_globe_1521lm": [
+{
+"t_ms": 1793048907958,
+"state": "on"
+},
+{
+"t_ms": 1793049028072,
+"state": "off"
+},
+{
+"t_ms": 1793049636904,
+"state": "on"
+},
+{
+"t_ms": 1793049636907,
+"state": "on"
+},
+{
+"t_ms": 1793049636909,
+"state": "on"
+},
+{
+"t_ms": 1793049637063,
+"state": "on"
+},
+{
+"t_ms": 1793049638038,
+"state": "on"
+},
+{
+"t_ms": 1793049638239,
+"state": "on"
+},
+{
+"t_ms": 1793049870301,
+"state": "off"
+},
+{
+"t_ms": 1793049945777,
+"state": "on"
+},
+{
+"t_ms": 1793049945981,
+"state": "on"
+}
+],
+"light.0xbc8d7efffe21ed09": [
+{
+"t_ms": 1793048907958,
+"state": "off"
+},
+{
+"t_ms": 1793049103244,
+"state": "on"
+},
+{
+"t_ms": 1793049104240,
+"state": "on"
+},
+{
+"t_ms": 1793049180556,
+"state": "on"
+},
+{
+"t_ms": 1793049256709,
+"state": "on"
+},
+{
+"t_ms": 1793049332913,
+"state": "on"
+},
+{
+"t_ms": 1793049409078,
+"state": "on"
+},
+{
+"t_ms": 1793049485317,
+"state": "on"
+},
+{
+"t_ms": 1793049561565,
+"state": "on"
+},
+{
+"t_ms": 1793049638288,
+"state": "off"
+},
+{
+"t_ms": 1793049794066,
+"state": "on"
+},
+{
+"t_ms": 1793049870288,
+"state": "off"
+}
+]
+}

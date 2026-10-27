@@ -1,0 +1,260 @@
+{
+"sensor.24117rk2cg_light_sensor": [
+{
+"t_ms": 1793048298984,
+"state": "0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048316769,
+"state": "1",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048333235,
+"state": "2",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048347151,
+"state": "0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048505634,
+"state": "3",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048694464,
+"state": "0",
+"unit_of_measurement": "lx"
+}
+],
+"sensor.bedroom_myggspray_wrlss_mtn_sensor_illuminance": [
+{
+"t_ms": 1793048298984,
+"state": "1.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048563631,
+"state": "40.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048621452,
+"state": "1.0",
+"unit_of_measurement": "lx"
+}
+],
+"sensor.unknown_phh_treble_vanilla_ambient_light": [
+{
+"t_ms": 1793048298984,
+"state": "0.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048546560,
+"state": "4.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048548560,
+"state": "3.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048550561,
+"state": "5.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048552560,
+"state": "6.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048576561,
+"state": "89.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048606568,
+"state": "0.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048639793,
+"state": "19.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793048666564,
+"state": "0.0",
+"unit_of_measurement": "lx"
+}
+],
+"light.kajplats_e14_ws_globe_806lm": [
+{
+"t_ms": 1793048298984,
+"state": "on"
+},
+{
+"t_ms": 1793048418997,
+"state": "off"
+},
+{
+"t_ms": 1793048584019,
+"state": "on"
+},
+{
+"t_ms": 1793048584021,
+"state": "on"
+},
+{
+"t_ms": 1793048584206,
+"state": "on"
+},
+{
+"t_ms": 1793048602358,
+"state": "off"
+},
+{
+"t_ms": 1793048620989,
+"state": "on"
+},
+{
+"t_ms": 1793048639493,
+"state": "on"
+},
+{
+"t_ms": 1793048639687,
+"state": "on"
+},
+{
+"t_ms": 1793048658119,
+"state": "off"
+},
+{
+"t_ms": 1793048731395,
+"state": "on"
+},
+{
+"t_ms": 1793048731596,
+"state": "on"
+}
+],
+"light.kajplats_e27_ws_globe_1521lm": [
+{
+"t_ms": 1793048298984,
+"state": "on"
+},
+{
+"t_ms": 1793048419100,
+"state": "off"
+},
+{
+"t_ms": 1793048602548,
+"state": "on"
+},
+{
+"t_ms": 1793048602549,
+"state": "on"
+},
+{
+"t_ms": 1793048602551,
+"state": "on"
+},
+{
+"t_ms": 1793048602794,
+"state": "on"
+},
+{
+"t_ms": 1793048621093,
+"state": "on"
+},
+{
+"t_ms": 1793048621425,
+"state": "on"
+},
+{
+"t_ms": 1793048658104,
+"state": "on"
+},
+{
+"t_ms": 1793048676412,
+"state": "on"
+},
+{
+"t_ms": 1793048676600,
+"state": "on"
+},
+{
+"t_ms": 1793048695002,
+"state": "on"
+},
+{
+"t_ms": 1793048713217,
+"state": "off"
+},
+{
+"t_ms": 1793048731789,
+"state": "on"
+},
+{
+"t_ms": 1793048731950,
+"state": "on"
+}
+],
+"light.0xbc8d7efffe21ed09": [
+{
+"t_ms": 1793048298984,
+"state": "off"
+},
+{
+"t_ms": 1793048437253,
+"state": "on"
+},
+{
+"t_ms": 1793048455399,
+"state": "on"
+},
+{
+"t_ms": 1793048473626,
+"state": "on"
+},
+{
+"t_ms": 1793048491845,
+"state": "on"
+},
+{
+"t_ms": 1793048509964,
+"state": "on"
+},
+{
+"t_ms": 1793048528260,
+"state": "on"
+},
+{
+"t_ms": 1793048546408,
+"state": "on"
+},
+{
+"t_ms": 1793048564641,
+"state": "on"
+},
+{
+"t_ms": 1793048584290,
+"state": "off"
+},
+{
+"t_ms": 1793048640020,
+"state": "on"
+},
+{
+"t_ms": 1793048658305,
+"state": "off"
+}
+]
+}

@@ -1,0 +1,327 @@
+{
+"sensor.24117rk2cg_light_sensor": [
+{
+"t_ms": 1793047491380,
+"state": "20",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793047588816,
+"state": "0",
+"unit_of_measurement": "lx"
+}
+],
+"sensor.bedroom_myggspray_wrlss_mtn_sensor_illuminance": [
+{
+"t_ms": 1793047491380,
+"state": "1.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793047665913,
+"state": "101.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793047702543,
+"state": "1.0",
+"unit_of_measurement": "lx"
+}
+],
+"sensor.unknown_phh_treble_vanilla_ambient_light": [
+{
+"t_ms": 1793047491380,
+"state": "65.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793047509040,
+"state": "0.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793047657809,
+"state": "73.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793047671869,
+"state": "85.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793047673946,
+"state": "72.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793047677671,
+"state": "97.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793047687807,
+"state": "76.0",
+"unit_of_measurement": "lx"
+},
+{
+"t_ms": 1793047717819,
+"state": "0.0",
+"unit_of_measurement": "lx"
+}
+],
+"light.kajplats_e14_ws_globe_806lm": [
+{
+"t_ms": 1793047491380,
+"state": "on"
+},
+{
+"t_ms": 1793047611394,
+"state": "off"
+},
+{
+"t_ms": 1793047626670,
+"state": "on"
+},
+{
+"t_ms": 1793047626672,
+"state": "on"
+},
+{
+"t_ms": 1793047626674,
+"state": "on"
+},
+{
+"t_ms": 1793047626879,
+"state": "on"
+},
+{
+"t_ms": 1793047642080,
+"state": "off"
+},
+{
+"t_ms": 1793047672871,
+"state": "on"
+},
+{
+"t_ms": 1793047672875,
+"state": "on"
+},
+{
+"t_ms": 1793047672877,
+"state": "on"
+},
+{
+"t_ms": 1793047673144,
+"state": "on"
+},
+{
+"t_ms": 1793047688641,
+"state": "on"
+},
+{
+"t_ms": 1793047688913,
+"state": "on"
+},
+{
+"t_ms": 1793047704221,
+"state": "off"
+},
+{
+"t_ms": 1793047735008,
+"state": "on"
+},
+{
+"t_ms": 1793047735011,
+"state": "on"
+},
+{
+"t_ms": 1793047750410,
+"state": "on"
+},
+{
+"t_ms": 1793047750643,
+"state": "on"
+},
+{
+"t_ms": 1793047765899,
+"state": "off"
+},
+{
+"t_ms": 1793047796714,
+"state": "on"
+},
+{
+"t_ms": 1793047796716,
+"state": "on"
+},
+{
+"t_ms": 1793047796928,
+"state": "on"
+},
+{
+"t_ms": 1793047812259,
+"state": "off"
+},
+{
+"t_ms": 1793047888923,
+"state": "on"
+}
+],
+"light.kajplats_e27_ws_globe_1521lm": [
+{
+"t_ms": 1793047491380,
+"state": "on"
+},
+{
+"t_ms": 1793047611523,
+"state": "off"
+},
+{
+"t_ms": 1793047642514,
+"state": "on"
+},
+{
+"t_ms": 1793047657657,
+"state": "off"
+},
+{
+"t_ms": 1793047673337,
+"state": "on"
+},
+{
+"t_ms": 1793047673340,
+"state": "on"
+},
+{
+"t_ms": 1793047673341,
+"state": "on"
+},
+{
+"t_ms": 1793047673581,
+"state": "on"
+},
+{
+"t_ms": 1793047689067,
+"state": "off"
+},
+{
+"t_ms": 1793047704588,
+"state": "on"
+},
+{
+"t_ms": 1793047719733,
+"state": "off"
+},
+{
+"t_ms": 1793047735349,
+"state": "on"
+},
+{
+"t_ms": 1793047735351,
+"state": "on"
+},
+{
+"t_ms": 1793047735354,
+"state": "on"
+},
+{
+"t_ms": 1793047735550,
+"state": "on"
+},
+{
+"t_ms": 1793047750744,
+"state": "off"
+},
+{
+"t_ms": 1793047766356,
+"state": "on"
+},
+{
+"t_ms": 1793047781454,
+"state": "off"
+},
+{
+"t_ms": 1793047797060,
+"state": "on"
+},
+{
+"t_ms": 1793047797063,
+"state": "on"
+},
+{
+"t_ms": 1793047797065,
+"state": "on"
+},
+{
+"t_ms": 1793047797314,
+"state": "on"
+},
+{
+"t_ms": 1793047812316,
+"state": "on"
+},
+{
+"t_ms": 1793047812524,
+"state": "on"
+},
+{
+"t_ms": 1793047827832,
+"state": "on"
+},
+{
+"t_ms": 1793047843124,
+"state": "on"
+},
+{
+"t_ms": 1793047858437,
+"state": "on"
+},
+{
+"t_ms": 1793047873795,
+"state": "off"
+},
+{
+"t_ms": 1793047889296,
+"state": "on"
+},
+{
+"t_ms": 1793047889470,
+"state": "on"
+}
+],
+"light.0xbc8d7efffe21ed09": [
+{
+"t_ms": 1793047491380,
+"state": "on"
+},
+{
+"t_ms": 1793047566846,
+"state": "off"
+},
+{
+"t_ms": 1793047657593,
+"state": "on"
+},
+{
+"t_ms": 1793047689107,
+"state": "off"
+},
+{
+"t_ms": 1793047719657,
+"state": "on"
+},
+{
+"t_ms": 1793047750796,
+"state": "off"
+},
+{
+"t_ms": 1793047781428,
+"state": "on"
+},
+{
+"t_ms": 1793047812577,
+"state": "off"
+}
+]
+}
