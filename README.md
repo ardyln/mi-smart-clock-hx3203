@@ -33,7 +33,7 @@ module, so a driver bug can't trap the clock in a boot loop.
   vendor HAL (`sensors.mt8167.so`) uses in `/sys/class/sensor/m_als_misc/`: `alsactive` (`"4,1"`),
   `alsbatch` (`"4,flag,delay_ns,latency_ns"`), `alsflush`, `alsdevnum`, `alscali`.
 - While the HAL has the sensor enabled, it polls the chip every 200 ms (or at the HAL's rate, minimum
-  100 ms), smooths ch0 over about 1 s, and reports whole lux on a change of at least 0.75 lx. It
+  100 ms), smooths both channels over about 1 s, and reports whole lux on a change of at least 0.75 lx. It
   sends the same "value+1, then value" kick after enabling as the stock framework does.
 - Xiaomi's framework object (`alsps_context`, 496 bytes, laid out like MediaTek's) is left alone.
   After boot its pointer is NULL and the code that would allocate it was freed with init text
@@ -50,12 +50,34 @@ sensor changed nothing; the part looks ALS-only (see [docs/NOTES.md](docs/NOTES.
 ## Calibration
 
 ```
-lux = 0.157 × (ch0 − 3.4)
 ch0 = (r09 << 8) | ((r0a & 0x0f) << 4) | (r0f & 0x0f) | ((r0f & 0x30) << 12)
+ch1 = (r08 << 3) | ((r0d & 0x3f) << 11) | (r0e & 7)
+x0 = ch0 − 3.4
+x1 = max(ch1 − 15.5, 0)
+ratio = (x1 + 0.18 × 100) / (x0 + 100)
+k = 0.157 at ratio ≤ 0.18, falling linearly to 0.055 at ratio ≥ 0.383
+lux = k × x0
 ```
 
-Both constants are module parameters, writable at runtime:
-`/sys/module/hx3203/parameters/lux_per_kcount` (157) and `dark_x10` (34).
+ch1 is more sensitive to infrared than ch0, so the ratio tells LED light (about 0.18) from daylight
+(0.383). The clock gives about 2.3× more counts per lux in daylight than under this LED, and v0.2,
+which used 0.157 for everything, read daylight about 3× too high. The `100` pulls dim light towards
+the LED value, because ch1 is unreliable at low levels. Lux still rises steadily with light, with no
+threshold.
+
+All constants are module parameters, writable at runtime in `/sys/module/hx3203/parameters/`:
+`lux_per_kcount` (157), `day_lux_per_kcount` (55), `led_ratio_pm` (180), `day_ratio_pm` (383),
+`dark_x10` (34), `dark1_x10` (155) and `ratio_prior_x10` (1000).
+
+**Dim LED light reads low by default.** Once any light reaches the sensor, ch1 sits about 20–34 counts
+above zero, which is more than the 15.5 above. v0.3 then takes dim LED light for part daylight and
+reads 9–40 % low, depending on the session. Setting `dark1_x10` to 300 removed this in a live test:
+TRADFRI 110 / 150 / 200 / 255 gave 1 / 5 / 11 / 24 lx, matching the LED calibration. It is not the
+default yet because its effect on dim daylight hasn't been measured. To try it (lost at reboot):
+
+```
+su -c 'echo 300 > /sys/module/hx3203/parameters/dark1_x10'
+```
 
 **Method.** A phone (Xiaomi 24117RK2CG) lay beside the clock facing the same way, reporting its light
 sensor to Home Assistant once a minute. An IKEA TRADFRI bulb was stepped through brightness levels and
@@ -84,8 +106,14 @@ the clock gave 0.157 consistently. Where a reference sits matters more than how 
 - The same TRADFRI setting gave ch0 between 124 and 154 at 255 across four runs (±10 %). That's the
   light, not the sensor.
 - Absolute accuracy is only as good as the reference phone's sensor.
-- Only LED light has been tested. Colour temperature moves ch0 about 10 % (2200 K vs 6500 K).
-  Daylight and other infrared-rich light are untested and may need an IR correction.
+- **Below about 2–3 lx the driver reports 0**, measured against the phone under the TRADFRI. ch0 barely
+  moves at those levels even though ch1 does, so this applies to every version of the driver. The
+  phone's low-end scale is unverified, so treat the figure as approximate.
+- Colour temperature moves ch0 about 10 % (2200 K vs 6500 K).
+- The daylight factor rests on a few sessions with a phone beside the clock, and those readings
+  scattered widely. Treat daylight lux as a rough figure. Dusk is unmeasured, and ch0 is only verified
+  as linear up to about 5400 counts, while bright daylight on this clock reaches about 10 700.
+- Infrared heaters clamp to the daylight factor. There's no reference lux to check that reading against.
 - Kiosk Satellite sends the value to Home Assistant about every 30 s after an initial burst, so steps
   shorter than that show mid-transition values.
 - The clock's own screen does not reach the sensor: screen brightness 1 vs 255 in a dark room
@@ -96,10 +124,13 @@ the clock gave 0.157 consistently. Where a reference sits matters more than how 
 - ID register `0x00` = `0x21`. Start-up sequence (from the GL-iNet Zephyr driver):
   `01=70, 02=06, 0c=22, 16=36, 0b=gain, 01=74, 0c=22`; off: `0c=02`.
 - Gain is `0x0b` bits 2:0. Settings 0–3 rise slowly and 4–7 are all about 36×, so 4 is used.
-- **ch0 is linear in light**, from about 1 lx up. Dark level 3.3–3.9 (±1.2). An earlier reading of a
-  low-light "dead zone" was wrong: it came from KAJPLATS bulbs that didn't actually light up when
-  switched from off ([bench/README.md](bench/README.md)).
-- **ch1 isn't used.** `ch1 = (r08 << 3) | ((r0d & 0x3f) << 11) | (r0e & 7)`. The reference driver
+- **ch0 is linear in light** above the low end, tested up to about 5400 counts. A 149-count LED step on
+  top of daylight matched the same step in the dark. Dark level 3.2–3.9 (±1.2). The first low-light
+  "dead zone" reading came from KAJPLATS bulbs that didn't actually light up when switched from off
+  ([bench/README.md](bench/README.md)), but a smaller one is real: starting from dark, ch0 comes up about
+  26–31 counts short against ch1 and the phone, under both LED and infrared light
+  ([docs/KERNEL.md](docs/KERNEL.md)).
+- **ch1 only sets the LED/daylight ratio**, never the level directly. The reference driver
   subtracts `1.45 × ch1` plus an "offset" from `0x80/0x81` (7 here). On this clock that pushes every
   indoor reading below zero. ch1's dark level moved 18 → 27 → 16 within an hour with no change in
   room light and no correlation with temperature. It responds to light weakly and not repeatably
@@ -125,7 +156,8 @@ the clock gave 0.157 consistently. Where a reference sits matters more than how 
 
 ### Open
 
-- Daylight check against a reference.
+- Dim daylight: does ch1 follow the same intercept, so that `dark1_x10` can default to 300?
+- Linearity above 5400 counts.
 - `0x01` bits 6:4: integration time in the HX3229 (`111` = longest, averaged 8×). If they behave the
   same here, the current `0x74` is already the maximum. Also `0x16` / `0x17`.
 - The `als_level` / `als_value` tables in Xiaomi's device-tree node, and a full dump of the board's tree.

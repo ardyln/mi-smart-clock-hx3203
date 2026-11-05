@@ -1,0 +1,8 @@
+{
+ "start_ms": 1793619494000,
+ "end_ms": 1793620214000,
+ "reference": "zorn (POCO F7 Pro, 24117RK2CG) via adb: dumpsys sensorservice every ~1 s, stk3bfx raw 4-ch at 5 Hz + on-change lux; screen kept on (svc power stayon), charging",
+ "lights": "KAJPLATS off; TRADFRI on at brightness 3 from 14:37:20 (negligible against daylight), otherwise daylight only",
+ "note": "zorn lay in landscape, tilted to the same angle as the clock screen, camera/sensor end next to the clock (user, 2026-11-02)",
+ "result": "ratio (ch1-15.5)/(ch0-3.4) 0.383 sd 0.002; zorn/v0.2 0.43-1.06 (mean 0.72), corr(zorn, ch0) only 0.69: zorn swung 3x while the clock moved 1.5x, so the two sensors saw different parts of the sky; 14:44-50 zorn = 0.46*x0 - ~2200 (r 0.98), 14:38-44 r 0.51"
+}

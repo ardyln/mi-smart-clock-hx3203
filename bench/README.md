@@ -30,6 +30,18 @@ Results used in the README: the phone fit (sweep 4, TRADFRI steps only), the dar
 temperature spread (sweep 1, 255 at 2202–6535 K) and the TRADFRI run-to-run spread (ch0 at 255: 137, 140, 154, 124 in
 sweeps 1–4).
 
+## Daylight and lock-in sessions (2026-10-27 to 11-02)
+
+- `daylight1`–`daylight3`: raw channels in daylight, with a phone beside the clock as the reference. These gave the 0.383 ratio.
+- `lockin*`: TRADFRI 0/255 square wave on top of daylight, for linearity. `lockin2` ran under fast clouds and is noisy.
+- `analyze_daylight3.py`, `analyze_lockin1.py` read them. `*_zorn.log` files are the phone's raw light sensor, polled over adb.
+
+## Heater and low-light LED sessions (2026-11-05/06)
+
+- `ir_day{400,800,1200}`, `ir_night{400,800,1200}`: IR heater switched by a smart plug, 60 s on/off ×3, by day and in the dark. Selector labels are nominal; measured power was about 370/720/1070 W. `ir_run.sh` and `ir_heater.py` ran them, `ir_an.py` and `ir_curve.py` read them.
+- Discard the first cycle of `ir_night400` and `ir_night800`: the sensor was idle because the kiosk app had died. The third cycle of `ir_night1200` overran to about 165 s when Home Assistant restarted; its first 60 s are valid.
+- `led300`: TRADFRI 0/40/60/80/110/150/200/255/0, 60 s each, with `dark1_x10=300` set live. `led_run.sh` and `led_sweep.py` ran it, `led_an.py` reads it.
+
 ## Other files
 
 - `pdsel.sh`: steps register `0x02` and logs both channels (no effect), then restores the init sequence.

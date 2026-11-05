@@ -14,10 +14,17 @@
  * sensor_event helpers are not exported; they are looked up by name.
  *
  * Chip facts (measured on the panel, see ../../README.md): ID 0x21, gain
- * reg 0x0b = 4. ch0 is linear in light; calibrated against a phone placed
- * beside the panel (tradfri LED, 0-23 lx, residuals within 0.6 lx):
- * lux = 0.157 * (ch0 - 3.4). ch1 is left out: its dark level wanders by
- * ~10 counts with no change in light. No proximity part.
+ * reg 0x0b = 4. ch0 is linear in light up to at least ~5400 counts.
+ * Calibrated against a phone placed beside the panel: LED light (tradfri,
+ * 0-23 lx) gives 0.157 lx per ch0 count above the 3.4 dark level, daylight
+ * only ~0.055. ch1 is IR-heavier, so the ratio (ch1 - 15.5) / (ch0 - 3.4)
+ * tells them apart: ~0.18 under the tradfri, ~0.383 in daylight. The factor
+ * is interpolated on that ratio (for a mix of the two this is exact). ch1's
+ * dark level wanders by ~10 counts, so the ratio is pulled towards the LED
+ * value by ratio_prior_x10 counts: ratio = (x1 + led * K) / (x0 + K). Dim
+ * light therefore reads as LED, and lux still rises monotonically with light
+ * (a count threshold or ramp would make dusk daylight read falling lux).
+ * No proximity part.
  */
 #include <linux/delay.h>
 #include <linux/i2c.h>
@@ -74,7 +81,27 @@ static int (*p_sensorlist_register_deviceinfo)(int sensor,
 
 static unsigned int lux_per_kcount = 157;
 module_param(lux_per_kcount, uint, 0644);
-MODULE_PARM_DESC(lux_per_kcount, "lux per 1000 ch0 counts (default 157)");
+MODULE_PARM_DESC(lux_per_kcount, "lux per 1000 ch0 counts under LED light (default 157)");
+
+static unsigned int day_lux_per_kcount = 55;
+module_param(day_lux_per_kcount, uint, 0644);
+MODULE_PARM_DESC(day_lux_per_kcount, "lux per 1000 ch0 counts in daylight (default 55)");
+
+static unsigned int led_ratio_pm = 180;
+module_param(led_ratio_pm, uint, 0644);
+MODULE_PARM_DESC(led_ratio_pm, "ch1/ch0 ratio under LED light, per mille (default 180)");
+
+static unsigned int day_ratio_pm = 383;
+module_param(day_ratio_pm, uint, 0644);
+MODULE_PARM_DESC(day_ratio_pm, "ch1/ch0 ratio in daylight, per mille (default 383)");
+
+static unsigned int dark1_x10 = 155;
+module_param(dark1_x10, uint, 0644);
+MODULE_PARM_DESC(dark1_x10, "ch1 dark level in tenths of a count (default 155)");
+
+static unsigned int ratio_prior_x10 = 1000;
+module_param(ratio_prior_x10, uint, 0644);
+MODULE_PARM_DESC(ratio_prior_x10, "ch0 counts x10 of LED-ratio prior mixed into ch1/ch0 (default 1000)");
 
 static unsigned int dark_x10 = 34;
 module_param(dark_x10, uint, 0644);
@@ -101,6 +128,7 @@ struct hx3203 {
 	bool enabled;
 	bool first_report;
 	int avg16;			/* smoothed ch0, x16 */
+	int avg16_1;			/* smoothed ch1, x16 */
 	int last_lux;
 };
 
@@ -130,9 +158,9 @@ static int hx3203_power(struct hx3203 *chip, bool on)
 	return 0;
 }
 
-static int hx3203_read_ch0(struct hx3203 *chip, int *ch0)
+static int hx3203_read(struct hx3203 *chip, int *ch0, int *ch1)
 {
-	static const u8 regs[] = { 0x09, 0x0a, 0x0f };
+	static const u8 regs[] = { 0x09, 0x0a, 0x0f, 0x08, 0x0d, 0x0e };
 	u8 r[ARRAY_SIZE(regs)];
 	int i, ret;
 
@@ -144,7 +172,33 @@ static int hx3203_read_ch0(struct hx3203 *chip, int *ch0)
 	}
 	*ch0 = (r[0] << 8) | ((r[1] & 0x0f) << 4) | (r[2] & 0x0f) |
 	       ((r[2] & 0x30) << 12);
+	*ch1 = (r[3] << 3) | ((r[4] & 0x3f) << 11) | (r[5] & 0x07);
 	return 0;
+}
+
+static int clamp_pm(int v)
+{
+	return v < 0 ? 0 : v > 1000 ? 1000 : v;
+}
+
+/* mlux from smoothed channels: LED factor, moved towards daylight by ch1/ch0 */
+static int hx3203_mlux(struct hx3203 *chip)
+{
+	int x0 = chip->avg16 * 10 / 16 - (int)dark_x10;
+	int x1 = chip->avg16_1 * 10 / 16 - (int)dark1_x10;
+	int k = ratio_prior_x10, lpk = lux_per_kcount, span, ratio_pm;
+
+	if (x0 <= 0)
+		return 0;
+	if (x1 < 0)
+		x1 = 0;
+	span = (int)day_ratio_pm - (int)led_ratio_pm;
+	if (span > 0) {
+		ratio_pm = (x1 * 1000 + (int)led_ratio_pm * k) / (x0 + k);
+		lpk += ((int)day_lux_per_kcount - lpk) *
+		       clamp_pm((ratio_pm - (int)led_ratio_pm) * 1000 / span) / 1000;
+	}
+	return x0 * lpk / 10;
 }
 
 static void hx3203_report(int value)
@@ -161,23 +215,23 @@ static void hx3203_report(int value)
 static void hx3203_poll_work(struct work_struct *work)
 {
 	struct hx3203 *chip = container_of(work, struct hx3203, poll.work);
-	int ch0, mlux;
+	int ch0, ch1, mlux;
 
 	mutex_lock(&chip->lock);
 	if (!chip->enabled)
 		goto out;
 
-	if (hx3203_read_ch0(chip, &ch0)) {
+	if (hx3203_read(chip, &ch0, &ch1)) {
 		dev_err_ratelimited(&chip->client->dev, "read failed\n");
 	} else {
-		if (chip->first_report)
+		if (chip->first_report) {
 			chip->avg16 = ch0 << 4;
-		else
+			chip->avg16_1 = ch1 << 4;
+		} else {
 			chip->avg16 += ((ch0 << 4) - chip->avg16) >> HX3203_EMA_SHIFT;
-		mlux = (chip->avg16 * 10 / 16 - (int)dark_x10) *
-		       (int)lux_per_kcount / 10;
-		if (mlux < 0)
-			mlux = 0;
+			chip->avg16_1 += ((ch1 << 4) - chip->avg16_1) >> HX3203_EMA_SHIFT;
+		}
+		mlux = hx3203_mlux(chip);
 
 		/* Like the stock framework: nudge on-change listeners after enable. */
 		if (chip->first_report) {

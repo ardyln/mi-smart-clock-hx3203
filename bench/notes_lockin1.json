@@ -1,0 +1,6 @@
+{
+ "marks_file": "marks_lockin1.json",
+ "what": "TRADFRI 0/255 square wave, 15 cycles of 20 s on/20 s off, on top of daylight, 14:56-15:06 2026-11-02; zorn in the same place as daylight3",
+ "result": "clock ch0 step 149 sd 21 (n=15) at base 4200-5360 counts, no trend with base (night 124-154): linear to ~5400. ch1 step 26.6 -> TRADFRI ratio ~0.18. zorn lux follows raw1 (not raw0): TRADFRI step 19.7 lx; lux per clock ch0 count TRADFRI 0.132 vs daylight 0.058 (ratio 2.3)",
+ "scripts": "lockin_tradfri.py (drive), analyze_lockin1.py"
+}

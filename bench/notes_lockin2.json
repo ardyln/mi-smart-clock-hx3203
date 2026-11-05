@@ -1,0 +1,5 @@
+{
+ "marks_file": "marks_lockin2.json",
+ "what": "repeat of lockin1, 15:14-15:25, zorn unmoved",
+ "result": "fast cloud changes (clock base 4900-6600 within minutes): clock ch0 step 214 sd 155 (median 235) vs zorn raw1 step median 5039 (lockin1 4754); TRADFRI 0.09-0.10 lx/count, daylight 0.052; too noisy for numbers, same direction (daylight ~2x more counts per lux)"
+}

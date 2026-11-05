@@ -23,3 +23,6 @@ modules/*/Module.symvers
 tools/alslog
 hx3203-als.zip
 magisk/hx3203.ko
+# Runs abandoned before they produced data
+bench/aborted/
+__pycache__/

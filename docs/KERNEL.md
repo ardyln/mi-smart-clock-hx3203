@@ -172,3 +172,16 @@ allocates and wires it was freed with init text. Rebuilding the context in a mod
 - Sibling HX3229 (TYHX datasheet; different register map): `0x01[6:4]` integration time, `0x02` photodiode
   selection per phase (visible / IR / shielded dark), `0x16` ADC gain, `0x17` current gain. On the HX3203, `0x02`
   doesn't select photodiodes (no effect on either channel); `0x01`, `0x16` and `0x17` are untested here.
+
+### Channel offset starting from dark (IR heater bench, 2026-11-05/06)
+
+A 370/720/1075 W IR heater was switched 60 s on, 60 s off, from about 1.5–2 m, by day (ch0 about 650) and in a dark room (ch0 about 3, ch1 10–17). `bench/ir_an.py` and `bench/ir_curve.py` read the logs.
+
+- By day the steps are proportional to power, with ch1/ch0 = 0.78 at every setting. LED light gives 0.18 and daylight 0.38.
+- From dark, every warm step fits `ch1 = 0.786·ch0 + 24.2` (residuals up to 1.4, ch0 steps +77 to +257). The slope matches the daylight step, so the spectrum is unchanged; the +24 appears only when starting from dark.
+- Against a reference phone sensor, ch0 starts about 13 counts low and ch1 about 14 high, with a kink just above dark. This is not simply a ch0 dead band, and the phone's scale is not reliable enough to split the offset between the channels.
+- The LED sweeps show the same thing. Above about 15 ch0 counts, `sweep1`–`sweep4` sit 25–34 counts above `0.18·ch0`, and `led300` (2026-11-06) 20–22, against a dark ch1 of 9–20. So ch1 has a lit intercept of about 20–34 that moves between sessions, not the dark level `dark1_x10` assumes. In v0.3 that lifts the ratio at dim LED levels and reads low: up to about 40 % in the old sweeps (ch0 25: 3.5 → 2.1 lx), 9–13 % in `led300`.
+- With `dark1_x10=300` the driver matched the v0.2 calibration live: TRADFRI 110/150/200/255 gave 1/5/11/24 lx, against 1.3/4.5/11.4/24.7. Any value from 250 to 350 gives the same result on that run. Whether dim daylight follows the same intercept is open, which is why the default is unchanged.
+- ch0 has a real blind spot under LED light as well: at TRADFRI 40/60/80, ch0 rises only 0.5–1.3 counts while ch1 rises 5–10 and the phone reads 1.4–2.3 lx. A fit of the phone against ch0 at TRADFRI 110–255 gives an intercept equal to about 26 ch0 counts, close to the heater's 31. The driver therefore reports 0 lx below roughly 2–3 lx on the phone's scale. The phone's low-end scale is unverified, and its position differs from the earlier sweeps, so this run does not recalibrate `lux_per_kcount`.
+
+`0x0c` reading `0x02` in a bench log means the driver is idle because no client holds the sensor, for example while the kiosk app restarts. Discard those samples: the channels are frozen.
